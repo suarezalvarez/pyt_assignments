@@ -22,16 +22,21 @@ residue,relative_threshold=0.03, absolute_threshold=10):
                 
                 protein_counter += 1       # new protein
                 relative_freq = target_residue_counter/residue_counter                                      # calculate relative frequency of the target residue
+                
+                
                 if relative_freq >= relative_threshold and target_residue_counter >= absolute_threshold:    # if thresholds are reached, count protein and set target achieved as True (stop iterating over sequence)
 
                     target_protein_counter += 1        
 
+                
                 residue_counter = 0        # reset residue counter
                 target_residue_counter = 0 # reset target residue counter
                 
             else:                                                                                           # run only if the thresholds have not been reached
+                
                 for char in line.strip():                                                                   # iterate over the characters of the lines that belong to the sequence, not the header
                     residue_counter += 1                                                                    # count residues
+                
                     if char == residue:
                         target_residue_counter += 1                                                         # count target residues
                 
@@ -55,34 +60,32 @@ def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 
         with open(output_filename , 'w') as written_tab:
             
 
-            seq = ""
-            raw_header = ""
+            seq = ""                 # initialice sequence
+            raw_header = ""          # initialice header
 
-            for line in read_file:
-                if line.startswith('>'):
-                    if seq:
-                        start = seq[:first_n] + "\t"
-                        end = seq[-last_m:] + "\t"
-
-                        count = str(Counter(seq))
-                        count = count[count.index("{")+1:count.index("}")] + "\n"
-
-                        written_tab.write(raw_header+start+end+count)
-                        
-                        seq = ""
-                        
-                        
-                        
-                    
-                    
-                    raw_header = line.strip()
-                    raw_header = raw_header.replace(">" , "") + "\t"
+            for line in read_file:                                                          # iterate over lines
                 
-                else:
+                if line.startswith('>'):                                                    # if header
+                    if seq:
+                        start = seq[:first_n] + "\t"                                        # take first residues of previous protein
+                        end = seq[-last_m:] + "\t"                                          # take last residues of previous protein
 
-                    seq += line.strip()
+                        count = str(Counter(seq))                                           # count residues of previous protein
+                        count = count[count.index("{")+1:count.index("}")] + "\n"           # remove curly brackets and convert to string
+                        count = count.replace("\'" ,"")
+                        written_tab.write(raw_header+start+end+count)                       # write to output file
+                        
+                        seq = ""                                                            # reset sequence string
+                
+                    
+                    raw_header = line.strip()                                               # save header of current protein
+                    raw_header = raw_header.replace(">" , "") + "\t"                        # remove ">" symbol
+                
+                else:                                                                       # if line is protein sequence
 
-            start = seq[:first_n] + "\t"
+                    seq += line.strip()                                                     # append lines of the sequence to "seq"
+
+            start = seq[:first_n] + "\t"                                                    # write info of the last protein
             end = seq[-last_m:] + "\t"
 
             count = str(Counter(seq))
