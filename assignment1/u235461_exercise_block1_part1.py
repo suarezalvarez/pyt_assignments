@@ -34,33 +34,41 @@ def factorial(n):
 
 # define count_up with recursivity #######################
 
-def recursive_count_up(n , odd = False , counter = 0):
+def recursive_count_up(n , odd = False):
     '''Counts from 0 to n. If odd = True, show only odd numbers'''
-    count = counter
 
-    # base case: if counter gets to n
-    if count == n:
-        if odd == True and n%2 == 0:
+    if odd == False:
+
+        if n == 0:
             
-            return()
-
+            print(0)
+            return
+        
         else:
-            print(count)
-            return(count)
+            
+            recursive_count_up(n-1 , odd = odd)
+            print(n)
+            return
 
-    # if not in base case:
+
     else:
-        if odd == False:
-            print(count)          # print every number if odd = False
-            odd_value = False
-        
+
+        if n == 1:
+
+            print(1)
+            return
+
         else:
-            if (count%2 == 1):    # print odd numbers if odd = True
-                print(count)
-            odd_value = True
-        
-        count = counter + 1       # update counter
-        recursive_count_up(n, odd = odd_value, counter = count) 
+                if n%2 == 1:
+
+                    recursive_count_up(n-2 , odd = odd)
+                    print(n)
+                    return
+                
+                else:
+                    recursive_count_up(n-1 , odd = odd)
+                    return
+            
 
 
 # define count_up without recursivity ###################
