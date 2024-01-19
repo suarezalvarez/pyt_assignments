@@ -45,53 +45,56 @@ residue,relative_threshold=0.03, absolute_threshold=10):
     return(target_protein_counter/protein_counter)
 
 
-'''Given a protein FASTA file (filename), save on a output file named output_filename the
-protein identifier, the first N-aminoacids, the last M-aminoacids and the absolute frequency
-in the protein of all the aminoacids found in the protein (the aminoacids that do not appear
-in the protein should not be shown). The fields must be separated by a tabulator, and one
-protein by line.'''
-
-N = 4
-M = 5
 
 from collections import Counter
 
-
-with open('example_fasta_file.fa' , 'r') as read_file:
-    with open('tab_fasta_example.tab' , 'w') as written_tab:
-        
-
-        seq = ""
-        raw_header = ""
-
-        for line in read_file:
-            if line.startswith('>'):
-                if seq:
-                    start = seq[:N] + "\t"
-                    end = seq[-M:] + "\t"
-
-                    count = str(Counter(seq))
-                    count = count[count.index("{")+1:count.index("}")] + "\n"
-
-                    written_tab.write(raw_header+start+end+count)
-
-                    
-                    
-                
-                
-                raw_header = line.strip()
-                raw_header = raw_header.replace(">" , "") + "\t"
-                print("hello")
-                print(raw_header)
-
-                
+def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 10):
+    '''Given a protein FASTA file (filename), save on a output file named output_filename the protein identifier, the first N-aminoacids, the last M-aminoacids and the absolute frequency in the protein of all the aminoacids found in the protein (the aminoacids that do not appear in the protein should not be shown). The fields must be separated by a tabulator, and one protein by line.'''
+    
+    with open(filename , 'r') as read_file:
+        with open(output_filename , 'w') as written_tab:
             
-            else:
 
-                seq += line.strip()
+            seq = ""
+            raw_header = ""
+
+            for line in read_file:
+                if line.startswith('>'):
+                    if seq:
+                        start = seq[:first_n] + "\t"
+                        end = seq[-last_m:] + "\t"
+
+                        count = str(Counter(seq))
+                        count = count[count.index("{")+1:count.index("}")] + "\n"
+
+                        written_tab.write(raw_header+start+end+count)
+                        
+                        seq = ""
+                        
+                        
+                        
+                    
+                    
+                    raw_header = line.strip()
+                    raw_header = raw_header.replace(">" , "") + "\t"
+                
+                else:
+
+                    seq += line.strip()
+
+            start = seq[:first_n] + "\t"
+            end = seq[-last_m:] + "\t"
+
+            count = str(Counter(seq))
+            count = count[count.index("{")+1:count.index("}")] + "\n"
+
+            written_tab.write(raw_header+start+end+count)
+    
                 
 
 
 
-seq = "AAAAAABBBBB"
-Counter(seq)
+print_sequence_summary('example_fasta_file.fa',
+                       'example_fasta_file.tab',
+                       first_n= 30,
+                       last_m=20)
