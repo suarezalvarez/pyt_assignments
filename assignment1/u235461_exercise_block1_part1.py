@@ -89,3 +89,5 @@ def count_up(n,odd = False):
 def get_final_price(price , discount_percentage = 10):
     '''Return the final price after applying the discount percentage'''
     return(price - (price*discount_percentage/100))
+
+
