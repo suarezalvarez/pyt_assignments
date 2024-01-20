@@ -1,3 +1,5 @@
+#### get_proteins_ratio_by_residue_threshold
+
 def get_proteins_ratio_by_residue_threshold(filename,
 residue,relative_threshold=0.03, absolute_threshold=10):
     '''Given a multi-line protein FASTA file (stored in a file with path 
@@ -22,8 +24,7 @@ residue,relative_threshold=0.03, absolute_threshold=10):
                 
                 protein_counter += 1       # new protein
                 relative_freq = target_residue_counter/residue_counter                                      # calculate relative frequency of the target residue
-                
-                
+
                 if relative_freq >= relative_threshold and target_residue_counter >= absolute_threshold:    # if thresholds are reached, count protein and set target achieved as True (stop iterating over sequence)
 
                     target_protein_counter += 1        
@@ -32,7 +33,7 @@ residue,relative_threshold=0.03, absolute_threshold=10):
                 residue_counter = 0        # reset residue counter
                 target_residue_counter = 0 # reset target residue counter
                 
-            else:                                                                                           # run only if the thresholds have not been reached
+            elif not line.startswith(">"):                                                                                           # run only if the thresholds have not been reached
                 
                 for char in line.strip():                                                                   # iterate over the characters of the lines that belong to the sequence, not the header
                     residue_counter += 1                                                                    # count residues
@@ -50,6 +51,8 @@ residue,relative_threshold=0.03, absolute_threshold=10):
     return(target_protein_counter/protein_counter)
 
 
+
+#### print_sequence_summary
 
 from collections import Counter
 
@@ -89,15 +92,9 @@ def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 
             end = seq[-last_m:] + "\t"
 
             count = str(Counter(seq))
-            count = count[count.index("{")+1:count.index("}")] + "\n"
+            count = count[count.index("{")+1:count.index("}")] + '\n'
+            count = count.replace("\'" ,"")
 
             written_tab.write(raw_header+start+end+count)
     
                 
-
-
-
-print_sequence_summary('example_fasta_file.fa',
-                       'example_fasta_file.tab',
-                       first_n= 30,
-                       last_m=20)
