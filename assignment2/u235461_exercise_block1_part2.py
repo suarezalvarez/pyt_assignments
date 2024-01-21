@@ -54,7 +54,6 @@ residue,relative_threshold=0.03, absolute_threshold=10):
 
 #### print_sequence_summary
 
-from collections import Counter
 
 def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 10):
     '''Given a protein FASTA file (filename), save on a output file named output_filename the protein identifier, the first N-aminoacids, the last M-aminoacids and the absolute frequency in the protein of all the aminoacids found in the protein (the aminoacids that do not appear in the protein should not be shown). The fields must be separated by a tabulator, and one protein by line.'''
@@ -72,8 +71,17 @@ def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 
                     if seq:
                         start = seq[:first_n] + "\t"                                        # take first residues of previous protein
                         end = seq[-last_m:] + "\t"                                          # take last residues of previous protein
-
-                        count = str(Counter(seq))                                           # count residues of previous protein
+                        
+                        count_dict = {}
+                        for aa in seq:                                                      # count residues of previous protein
+                            if aa in count_dict:
+                                count_dict[aa] += 1
+                            
+                            else:
+                                count_dict[aa] = 1
+                        
+                        
+                        count = str(count_dict)
                         count = count[count.index("{")+1:count.index("}")] + "\n"           # remove curly brackets and convert to string
                         count = count.replace("\'" ,"")
                         written_tab.write(raw_header+start+end+count)                       # write to output file
@@ -88,13 +96,19 @@ def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 
 
                     seq += line.strip()                                                     # append lines of the sequence to "seq"
 
-            start = seq[:first_n] + "\t"                                                    # write info of the last protein
-            end = seq[-last_m:] + "\t"
-
-            count = str(Counter(seq))
-            count = count[count.index("{")+1:count.index("}")] + '\n'
+            start = seq[:first_n] + "\t"                                        # take first residues of previous protein
+            end = seq[-last_m:] + "\t"                                          # take last residues of previous protein
+                        
+            count_dict = {}
+            for aa in seq:                                                      # count residues of previous protein
+                if aa in count_dict:
+                    count_dict[aa] += 1
+                            
+                else:
+                    count_dict[aa] = 1
+                        
+            count = str(count_dict)        
+            count = count[count.index("{")+1:count.index("}")] + "\n"           # remove curly brackets and convert to string
             count = count.replace("\'" ,"")
+            written_tab.write(raw_header+start+end+count)                       # write to output file
 
-            written_tab.write(raw_header+start+end+count)
-    
-                
