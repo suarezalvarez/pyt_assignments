@@ -100,7 +100,7 @@ def print_sequence_summary(filename , output_filename , first_n = 10 , last_m = 
             end = seq[-last_m:] + "\t"                                          # take last residues of previous protein
                         
             count_dict = {}
-            for aa in seq:                                                      # count residues of previous protein
+            for aa in seq:                                                      # count residues of last protein
                 if aa in count_dict:
                     count_dict[aa] += 1
                             
