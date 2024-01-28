@@ -40,7 +40,8 @@ def compare_fasta_file_identifiers(fasta_filenames_list):
     - "intersection": a set with the common indentifiers found in all the files
     - "union": a set with all the identifiers (unique) found in all the files.
     - "frequency": a dictionary with all the identifiers as keys and the number of files in which it appears as values. 
-    - "specific": a dictionary with the name of the input files as keys and a set with the specific identifiers as values.'''
+    - "specific": a dictionary with the name of the input files as keys and a set with the specific identifiers as values.
+    The ID comparison is case insensitive (all IDs are converted to upper case).'''
 
 
     # create necessary dictionaries
