@@ -2,13 +2,13 @@ import sequence_dictionaries as seqdicts
 
 
 
-class Sequence():
+class Sequence():       # define class sequence
 
     alphabet = ""
     weights = {}
 
 
-    def __init__(self, identifier, sequence):
+    def __init__(self, identifier, sequence):                     # define attributes
 
         self.__identifier = identifier
         self.__sequence = sequence
@@ -17,7 +17,7 @@ class Sequence():
         for char in self.__sequence:
             if char not in self.alphabet:
 
-                raise ValueError(f"Impossible to create instance: {char} not possible")
+                raise ValueError(f"Impossible to create instance: {char} not possible") # raise exception if character is not in alphabet
                 
     def get_identifier(self):
         return self.__identifier
@@ -30,7 +30,7 @@ class Sequence():
     
         weight = 0
 
-        for residue in self.get_sequence():
+        for residue in self.get_sequence():         # calculate mw
             weight += self.weights[residue]
         
         return weight
@@ -58,9 +58,12 @@ class Sequence():
 
         if type(self) == type(other):
 
-            return type(self)("+".join([self.get_identifier(),other.get_identifier()]),
+            return type(self)("+".join([self.get_identifier(),other.get_identifier()]),            # create new instance where the identifier is id1+id2, and the sequence is the concatenation of the 2 sequences
                                self.get_sequence()+other.get_sequence())
         
+        else:
+
+            raise TypeError("Sequences must be instances of the same class to be added.")
 
     def __getitem__(self,key):
 
@@ -101,10 +104,20 @@ class Sequence():
 
 
 
+
+
+
+
 class ProteinSequence(Sequence):
+
     alphabet = seqdicts.protein_letters
+
     weights = seqdicts.protein_weights
+
     pass
+
+
+
 
 
 
@@ -118,13 +131,16 @@ class NucleotideSequence(Sequence):
         
         for codon_start in range(0,len(self.get_sequence()),3):
 
-            codon = self.get_sequence()[codon_start:codon_start+3]
+            codon = self.get_sequence()[codon_start:codon_start+3]     # translate sequence
             translated_seq += self.translate_table[codon]
 
         translated_seq = ProteinSequence(self.get_identifier , translated_seq)
         
         return translated_seq
     
+
+
+
 
 class DNASequence(NucleotideSequence):
 
