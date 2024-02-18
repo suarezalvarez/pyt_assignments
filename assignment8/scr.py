@@ -107,7 +107,6 @@ class Sequence():       # define class sequence
 
 
 
-
 class ProteinSequence(Sequence):
 
     alphabet = seqdicts.protein_letters
@@ -134,7 +133,7 @@ class NucleotideSequence(Sequence):
             codon = self.get_sequence()[codon_start:codon_start+3]     # translate sequence
             translated_seq += self.translate_table[codon]
 
-        translated_seq = ProteinSequence(self.get_identifier , translated_seq)
+        translated_seq = ProteinSequence(self.get_identifier() , translated_seq)
         
         return translated_seq
     
@@ -160,7 +159,7 @@ class DNASequence(NucleotideSequence):
             else:
                 transcribed_seq += char
 
-        transcribed_seq = RNASequence(self.get_identifier , transcribed_seq)
+        transcribed_seq = RNASequence(self.get_identifier() , transcribed_seq)
         
         return transcribed_seq
         
@@ -186,6 +185,6 @@ class RNASequence(NucleotideSequence):
             else:
                 rt_seq += char
 
-        rt_seq = DNASequence(self.get_identifier , rt_seq)
+        rt_seq = DNASequence(self.get_identifier() , rt_seq)
         
         return rt_seq
